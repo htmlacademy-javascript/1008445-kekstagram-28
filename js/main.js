@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-const messages = [
+const MESSAGES = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
@@ -7,7 +7,7 @@ const messages = [
   'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
-const names = [
+const NAMES = [
   'Артём',
   'Дарья',
   'Тимур',
@@ -15,7 +15,7 @@ const names = [
   'Алексей',
   'Максим'
 ];
-const descriptions = [
+const DESCRIPTIONS = [
   'Я на море',
   'Чилю',
   'Привет всем =)',
@@ -24,7 +24,10 @@ const descriptions = [
   'Ужасный ужас!'
 ];
 const SIMILAR_OBJECTS_COUNT = 25;
-let objectIdCounter = 1, commentIdCounter = 1;
+const AVATAR_COUNT = 6;
+const MAX_COMMENT_COUNT = 2;
+const MIN_LIKES_COUNT = 15;
+const MAX_LIKES_COUNT = 200;
 
 const getRandomPostiveInteger = (a, b) => {
   const min = Math.ceil(Math.min(Math.abs(a), Math.abs(b)));
@@ -33,22 +36,25 @@ const getRandomPostiveInteger = (a, b) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
+const generatorId = () => {
+  let id = 1;
+  return () => id++;
+};
+
 const getRandomArrayElement = (elements) => elements[getRandomPostiveInteger(0, elements.length - 1)];
+const commentIdGen = generatorId();
 
 const createComment = () => ({
-  id: commentIdCounter++,
-  avatar: `img/avatar-${ getRandomPostiveInteger(1, 6) }.svg`,
-  message: getRandomArrayElement(messages),
-  name: getRandomArrayElement(names),
+  id: commentIdGen(),
+  avatar: `img/avatar-${ getRandomPostiveInteger(1, AVATAR_COUNT) }.svg`,
+  message: Array.from({ length: getRandomPostiveInteger(1, 2)}, () => getRandomArrayElement(MESSAGES)).join(' '),
+  name: getRandomArrayElement(NAMES),
 });
 
-const createObject = () => ({
-  id: objectIdCounter,
-  url: `photos/${ objectIdCounter++ }.jpg`,
-  description: getRandomArrayElement(descriptions),
-  likes: getRandomPostiveInteger(15, 200),
-  comments: Array.from({ length: getRandomPostiveInteger(1, 2) }, createComment)
+const createObject = (index) => ({
+  id: index,
+  url: `photos/${ index }.jpg`,
+  description: getRandomArrayElement(DESCRIPTIONS),
+  likes: getRandomPostiveInteger(MIN_LIKES_COUNT, MAX_LIKES_COUNT),
+  comments: Array.from({ length: getRandomPostiveInteger(1, MAX_COMMENT_COUNT) }, createComment)
 });
-
-//const objects = Array.from({ length: SIMILAR_OBJECTS_COUNT }, createObject);
-
