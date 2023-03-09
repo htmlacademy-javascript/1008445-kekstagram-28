@@ -11,4 +11,6 @@ const generatorId = () => {
   return () => id++;
 };
 
-export { getRandomPostiveInteger, generatorId };
+const isEscapeKey = (evt) => evt.key === 'Escape';
+
+export { getRandomPostiveInteger, generatorId, isEscapeKey };
