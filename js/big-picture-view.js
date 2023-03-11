@@ -5,7 +5,7 @@ const visibleCommentCount = document.querySelector('.social__comment-count');
 const commentLoaderButton = document.querySelector('.comments-loader');
 const cancelButton = document.querySelector('.big-picture__cancel');
 const COMMENT_COUNT_PART = 5;
-const currentPictureStore = {};
+const commentsStore = {};
 
 const onCloseEvent = (evt) => {
   if (isEscapeKey(evt) || evt.target.matches('.big-picture__cancel')) {
@@ -14,11 +14,11 @@ const onCloseEvent = (evt) => {
   }
 };
 
-const createCommentElement = (comment) => {
+const createCommentElement = ({ avatar, name, message }) => {
   const commentElement = document.querySelector('.social__comment').cloneNode(true);
-  commentElement.querySelector('img').src = comment.avatar;
-  commentElement.querySelector('img').alt = comment.name;
-  commentElement.querySelector('p').textContent = comment.message;
+  commentElement.querySelector('img').src = avatar;
+  commentElement.querySelector('img').alt = name;
+  commentElement.querySelector('p').textContent = message;
   return commentElement;
 };
 
@@ -31,15 +31,15 @@ const fillComments = (comments, commentsCount) => {
 };
 
 const commentLoaderButtonOnClick = () => {
-  if (currentPictureStore.totalVisibleComments + COMMENT_COUNT_PART >= currentPictureStore.picture.comments.length) {
+  if (commentsStore.visibleComments + COMMENT_COUNT_PART >= commentsStore.comments.length) {
     commentLoaderButton.classList.add('hidden');
     commentLoaderButton.removeEventListener('click', commentLoaderButtonOnClick);
-    currentPictureStore.totalVisibleComments = currentPictureStore.picture.comments.length;
+    commentsStore.visibleComments = commentsStore.comments.length;
   } else {
-    currentPictureStore.totalVisibleComments += COMMENT_COUNT_PART;
+    commentsStore.visibleComments += COMMENT_COUNT_PART;
   }
 
-  fillComments(currentPictureStore.picture.comments, currentPictureStore.totalVisibleComments);
+  fillComments(commentsStore.comments, commentsStore.visibleComments);
 };
 
 function openView(isCommentLoaderButtonVisible) {
@@ -68,18 +68,18 @@ function closeView() {
   document.body.classList.remove('modal-open');
 }
 
-const openBigPictureView = (pictureObject) => {
-  currentPictureStore.picture = pictureObject;
-  const commentsCount = pictureObject.comments.length;
-  bigPictureView.querySelector('.big-picture__img img').src = pictureObject.url;
-  bigPictureView.querySelector('.likes-count').textContent = pictureObject.likes;
+const openBigPictureView = ({ url, likes, description, comments }) => {
+  commentsStore.comments = comments;
+  const commentsCount = comments.length;
+  bigPictureView.querySelector('.big-picture__img img').src = url;
+  bigPictureView.querySelector('.likes-count').textContent = likes;
+  bigPictureView.querySelector('.social__caption').textContent = description;
   bigPictureView.querySelector('.comments-count').textContent = commentsCount;
-  bigPictureView.querySelector('.social__caption').textContent = pictureObject.description;
 
   const isCommentLoaderButtonVisible = commentsCount > COMMENT_COUNT_PART;
-  currentPictureStore.totalVisibleComments = isCommentLoaderButtonVisible ? COMMENT_COUNT_PART : commentsCount;
+  commentsStore.visibleComments = isCommentLoaderButtonVisible ? COMMENT_COUNT_PART : commentsCount;
 
-  fillComments(pictureObject.comments, currentPictureStore.totalVisibleComments);
+  fillComments(comments, commentsStore.visibleComments);
   openView(isCommentLoaderButtonVisible);
 };
 
