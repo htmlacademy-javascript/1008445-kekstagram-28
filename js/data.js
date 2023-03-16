@@ -26,7 +26,7 @@ const DESCRIPTIONS = [
   'Ужасный ужас!'
 ];
 const AVATAR_COUNT = 6;
-const MAX_COMMENT_COUNT = 2;
+const MAX_COMMENT_COUNT = 15;
 const MIN_LIKES_COUNT = 15;
 const MAX_LIKES_COUNT = 200;
 
