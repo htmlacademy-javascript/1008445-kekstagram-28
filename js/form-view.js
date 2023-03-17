@@ -42,12 +42,12 @@ const onCloseEvent = (evt) => {
 };
 
 function openView() {
-  if (imgUploadFormView && formView && imgUploadCancelButton) {
+  if (formView && imgUploadFormView && imgUploadCancelButton) {
+    formView.addEventListener('submit', onSubmitEvent);
     imgUploadFormView.classList.remove('hidden');
     imgUploadCancelButton.addEventListener('click', onCloseEvent);
     document.addEventListener('keydown', onCloseEvent);
     document.body.classList.add('modal-open');
-    formView.addEventListener('submit', onSubmitEvent);
 
     pristine = new Pristine(formView, {
       classTo: 'img-upload__field-wrapper',
@@ -58,18 +58,23 @@ function openView() {
       errorTextClass: 'input__error'
     });
 
-    pristine.addValidator(hashtagsInput, validateHashtag, 'Хэш тэг или список хэш-тегов не соответствует правилам');
-    pristine.addValidator(commentInput, validateComment, 'Длина комментария не может составлять больше 140 символов');
+    if (hashtagsInput) {
+      pristine.addValidator(hashtagsInput, validateHashtag, 'Хэш тэг или список хэш-тегов не соответствует правилам');
+    }
+    if (commentInput) {
+      pristine.addValidator(commentInput, validateComment, 'Длина комментария не может составлять больше 140 символов');
+    }
   }
 }
 
 function closeView() {
-  if (imgUploadFormView && formView && imgUploadCancelButton && pristine) {
-    imgUploadFormView.classList.add('hidden');
-    document.removeEventListener('keydown', onCloseEvent);
-    imgUploadCancelButton.removeEventListener('click', onCloseEvent);
-    document.body.classList.remove('modal-open');
+  if (formView && imgUploadFormView && imgUploadCancelButton && imgUploadInput && pristine) {
     formView.removeEventListener('submit', onSubmitEvent);
+    imgUploadFormView.classList.add('hidden');
+    imgUploadCancelButton.removeEventListener('click', onCloseEvent);
+    document.removeEventListener('keydown', onCloseEvent);
+    document.body.classList.remove('modal-open');
+
     imgUploadInput.value = '';
     pristine.destroy();
   }
