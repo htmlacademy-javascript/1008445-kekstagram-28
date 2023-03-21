@@ -1,6 +1,6 @@
 import { createObject } from './data.js';
 
-const SIMILAR_PICTURE_COUNT = 6;
+const SIMILAR_PICTURE_COUNT = 16;
 const similarListElement = document.querySelector('.pictures');
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 const similarPictureFragment = document.createDocumentFragment();
