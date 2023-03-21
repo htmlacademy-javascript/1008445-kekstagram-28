@@ -69,6 +69,7 @@ const onClickEvent = (evt) => {
     effectLevelContainerlement.classList.add('hidden');
     imgUploadPreView.className = '';
     imgUploadPreView.style = '';
+    scaleControlValuelement.value = '100%';
   } else if (evt.target.matches('.effects__preview')) {
     effectLevelContainerlement.classList.remove('hidden');
     imgUploadPreView.className = '';
