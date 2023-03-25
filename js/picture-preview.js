@@ -79,7 +79,7 @@ function closeView() {
   }
 }
 
-const openBigPictureView = ({ url, likes, description, comments }) => {
+function openPicturePreview ({ url, likes, description, comments }) {
   commentsStore.comments = comments;
   const commentsCount = comments.length;
   const bigPictureImg = document.querySelector('.big-picture__img img');
@@ -104,7 +104,6 @@ const openBigPictureView = ({ url, likes, description, comments }) => {
 
   fillComments(comments, commentsStore.visibleComments);
   openView(isCommentLoaderButtonVisible);
-};
+}
 
-
-export { openBigPictureView };
+export { openPicturePreview };

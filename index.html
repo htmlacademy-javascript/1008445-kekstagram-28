@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/alert.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="vendor/nouislider/nouislider.css">
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
@@ -31,7 +32,7 @@
       <section class="img-upload">
         <div class="img-upload__wrapper">
           <h2 class="img-upload__title  visually-hidden">Загрузка фотографии</h2>
-          <form class="img-upload__form" action="https://28.javascript.pages.academy/kekstagram" id="upload-select-image" method="post" enctype="multipart/form-data" autocomplete="off">
+          <form class="img-upload__form" id="upload-select-image" method="post" enctype="multipart/form-data" autocomplete="off">
 
             <!-- Изначальное состояние поля для загрузки изображения -->
             <fieldset class="img-upload__start">
@@ -163,7 +164,7 @@
             </li>
             <li class="social__comment">
               <img class="social__picture" src="img/avatar-3.svg" alt="Аватар комментатора фотографии" width="35" height="35">
-               <p class="social__text">Да это фоташоп!!!!!!!!</p>
+              <p class="social__text">Да это фоташоп!!!!!!!!</p>
             </li>
           </ul>
 
@@ -196,6 +197,11 @@
       </ul>
     </div>
   </footer>
+
+  <!-- Оповещение об ошибке -->
+  <div class="alert">
+    <p class="alert__message"></p>
+  </div>
 
   <!-- Шаблон изображения случайного пользователя -->
   <template id="picture">
@@ -232,6 +238,8 @@
   <template id="messages">
     <div class="img-upload__message  img-upload__message--loading">Загружаем...</div>
   </template>
+
+
   <script src="vendor/nouislider/nouislider.js"></script>
   <script src="vendor/pristine/pristine.min.js"></script>
   <script src="js/main.js" type="module"></script>

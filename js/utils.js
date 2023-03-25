@@ -1,16 +1,18 @@
 /* eslint-disable no-unused-vars */
 const IMG_EXTENTIONS = ['jpg', 'bmp', 'png'];
-
-const getRandomPostiveInteger = (a, b) => {
-  const min = Math.ceil(Math.min(Math.abs(a), Math.abs(b)));
-  const max = Math.floor(Math.max(Math.abs(a), Math.abs(b)));
-
-  return Math.floor(Math.random() * (max - min + 1) + min);
-};
-
-const generatorId = () => {
-  let id = 1;
-  return () => id++;
+const ALERT_SHOW_TIME = 3000;
+const MAX_HASHTAG_COUNT = 5;
+const HASHTAG_REG_EXP = /^#[a-zа-яё0-9]{1,19}$/i;
+const Effects = [
+  { filterClass: 'effects__preview--chrome', filterName: 'grayscale', min: 0, max: 1, step: 0.1, dimention: '' },
+  { filterClass: 'effects__preview--sepia', filterName: 'sepia', min: 0, max: 1, step: 0.1, dimention: '' },
+  { filterClass: 'effects__preview--marvin', filterName: 'invert', min: 0, max: 100, step: 1, dimention: '%' },
+  { filterClass: 'effects__preview--phobos', filterName: 'blur', min: 0, max: 3, step: 0.1, dimention: 'px' },
+  { filterClass: 'effects__preview--heat', filterName: 'brightness', min: 1, max: 3, step: 0.1, dimention: '' }
+];
+const SubmitButtonTexts = {
+  IDLE: 'Опубликовать',
+  SENDING: 'Публикую...'
 };
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
@@ -27,5 +29,39 @@ const checkIfImg = (file) => {
   return ext && IMG_EXTENTIONS.includes(ext);
 };
 
+const showAlert = (message) => {
+  const alertElement = document.querySelector('.alert');
+  const alertTextEelemnt = document.querySelector('.alert__message');
 
-export { getRandomPostiveInteger, generatorId, isEscapeKey, checkIfImg };
+  alertElement.classList.add('show');
+  alertTextEelemnt.textContent = message;
+
+  setTimeout(() => {
+    alertElement.classList.remove('show');
+  }, ALERT_SHOW_TIME);
+};
+
+function validateHashtag (hashtags) {
+  if (!hashtags) {
+    return true;
+  }
+  const parsedHashtags = hashtags.split(' ');
+  const parsedHashtagsSet = new Set(parsedHashtags);
+  if (parsedHashtagsSet.size === parsedHashtags.length && parsedHashtags.length <= MAX_HASHTAG_COUNT) {
+    return parsedHashtags.every((hashtag) => HASHTAG_REG_EXP.test(hashtag));
+  }
+}
+
+function validateComment(comment) {
+  return comment.length <= 140;
+}
+
+export {
+  isEscapeKey,
+  checkIfImg,
+  showAlert,
+  validateComment,
+  validateHashtag,
+  Effects,
+  SubmitButtonTexts
+};
