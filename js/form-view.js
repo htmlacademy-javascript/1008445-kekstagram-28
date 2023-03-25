@@ -38,11 +38,15 @@ const allElementsOnPageAvailable = formView &&
 
 
 const blockSubmitButton = () => {
+  console.log('block');
+  console.log(formSubmitButton);
+  console.log(SubmitButtonTexts.SENDING);
   formSubmitButton.disabled = true;
   formSubmitButton.textContent = SubmitButtonTexts.SENDING;
 };
 
 const unblockSubmitButton = () => {
+  console.log('unblock');
   formSubmitButton.disabled = false;
   formSubmitButton.textContent = SubmitButtonTexts.IDLE;
 };
@@ -60,7 +64,7 @@ const onFormSubmitEvent = (evt) => {
       .catch(() => {
         showErrorMessage();
       })
-      .finally(unblockSubmitButton());
+      .finally(unblockSubmitButton);
   }
 };
 
@@ -149,12 +153,11 @@ function closeView() {
     document.removeEventListener('keydown', onFormCloseEvent);
     document.body.classList.remove('modal-open');
 
+    formView.reset();
     imgUploadInput.value = '';
     imgUploadPreView.className = '';
     imgUploadPreView.style = '';
     scaleControlValuelement.value = '100%';
-    hashtagsInput.value = '';
-    commentInput.value = '';
 
     destroySlider(effectLevelSliderElement);
     destroyValidator(effectLevelSliderElement);
