@@ -1,0 +1,65 @@
+.alert {
+  z-index: 100;
+  position: absolute;
+  display: inline-block;
+  top: 20px;
+  left: 50%;
+  font-size: 16px;
+  text-align: center;
+  background-color: rgba(255, 68, 68, 0.9);
+  box-shadow: rgba(255, 255, 255, 0.2) 0px 3px 8px;
+  border: 1px solid white;
+  border-radius: 10px;
+  max-width: 800px;
+  margin-left: -300px;
+  visibility: hidden;
+}
+
+.alert p {
+  padding: 10px 30px;
+}
+
+.alert.show {
+  visibility: visible;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@keyframes fadein {
+  from {
+    top: 0;
+    opacity: 0;
+  }
+  to {
+    top: 20px;
+    opacity: 1;
+  }
+}
+
+@keyframes fadeout {
+  from {
+    top: 20px;
+    opacity: 1;
+  }
+  to {
+    top: 0;
+    opacity: 0;
+  }
+}
+
+.input__error {
+  background-color: rgba(255, 68, 68, 0.9);
+  box-shadow: rgba(255, 255, 255, 0.2) 0px 3px 8px;
+  border-radius: 10px;
+  border: 1px solid white;
+  padding: 10px;
+  margin: 0 auto 10px;
+  text-align: center;
+  order: -1;
+  text-align: center;
+  animation: fadein 0.5s;
+}
+
+.has-danger {
+  display: flex;
+  flex-direction: column;
+}

@@ -1,16 +1,18 @@
 /* eslint-disable no-unused-vars */
 const IMG_EXTENTIONS = ['jpg', 'bmp', 'png'];
+const ALERT_SHOW_TIME = 3000;
 
-const getRandomPostiveInteger = (a, b) => {
-  const min = Math.ceil(Math.min(Math.abs(a), Math.abs(b)));
-  const max = Math.floor(Math.max(Math.abs(a), Math.abs(b)));
-
-  return Math.floor(Math.random() * (max - min + 1) + min);
-};
-
-const generatorId = () => {
-  let id = 1;
-  return () => id++;
+const Effects = [
+  { class: 'effects__preview--none', style: '' },
+  { class: 'effects__preview--chrome', style: 'grayscale', min: 0, max: 1, step: 0.1, dimention: '' },
+  { class: 'effects__preview--sepia', style: 'sepia', min: 0, max: 1, step: 0.1, dimention: '' },
+  { class: 'effects__preview--marvin', style: 'invert', min: 0, max: 100, step: 1, dimention: '%' },
+  { class: 'effects__preview--phobos', style: 'blur', min: 0, max: 3, step: 0.1, dimention: 'px' },
+  { class: 'effects__preview--heat', style: 'brightness', min: 1, max: 3, step: 0.1, dimention: '' }
+];
+const SubmitButtonTexts = {
+  IDLE: 'Опубликовать',
+  SENDING: 'Публикую...'
 };
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
@@ -27,5 +29,22 @@ const checkIfImg = (file) => {
   return ext && IMG_EXTENTIONS.includes(ext);
 };
 
+const showAlert = (message) => {
+  const alertElement = document.querySelector('.alert');
+  const alertTextEelemnt = document.querySelector('.alert__message');
 
-export { getRandomPostiveInteger, generatorId, isEscapeKey, checkIfImg };
+  alertElement.classList.add('show');
+  alertTextEelemnt.textContent = message;
+
+  setTimeout(() => {
+    alertElement.classList.remove('show');
+  }, ALERT_SHOW_TIME);
+};
+
+export {
+  isEscapeKey,
+  checkIfImg,
+  showAlert,
+  Effects,
+  SubmitButtonTexts
+};
