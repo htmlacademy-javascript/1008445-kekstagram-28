@@ -6,10 +6,12 @@ import { createFormView } from './form-view.js';
 const picturesElement = document.querySelector('.pictures');
 const picturesFragment = document.querySelector('#picture');
 const pictureFragment = document.createDocumentFragment();
-const allElementsOnPageAvailable = picturesFragment && picturesElement && pictureFragment;
+const allElementsAvailable = picturesFragment &&
+  picturesElement &&
+  pictureFragment;
 
 const fillPicturesView = (pictures) => {
-  if (allElementsOnPageAvailable) {
+  if (allElementsAvailable) {
     pictures.forEach(({ id, url, likes, comments, description }) => {
       const pictureTemplate = picturesFragment.content.querySelector('.picture');
       if (pictureTemplate) {
@@ -37,8 +39,6 @@ const fillPicturesView = (pictures) => {
         }
       }
     });
-
-    createFormView();
   }
 };
 
@@ -49,7 +49,8 @@ function createMainView() {
     })
     .catch((e) => {
       showAlert(e.message);
-    });
+    })
+    .finally(createFormView);
 }
 
 export { createMainView };

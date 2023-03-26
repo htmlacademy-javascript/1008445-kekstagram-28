@@ -16,20 +16,24 @@ const onMessageCloseEvent = (evt) => {
 const showSuccessMessage = () => {
   if (successMessageFragment) {
     const successMessageTemplate = successMessageFragment.content.querySelector('.success');
-    const successMessageElement = successMessageTemplate.cloneNode(true);
-    document.body.appendChild(successMessageElement);
-    successMessageElement.addEventListener('click', onMessageCloseEvent);
-    document.addEventListener('keydown', onMessageCloseEvent);
+    if (successMessageTemplate) {
+      const successMessageElement = successMessageTemplate.cloneNode(true);
+      document.body.appendChild(successMessageElement);
+      successMessageElement.addEventListener('click', onMessageCloseEvent);
+      document.addEventListener('keydown', onMessageCloseEvent);
+    }
   }
 };
 
 const showErrorMessage = () => {
   if (errorMessageFragment) {
-    const errorMessageTemplate = successMessageFragment.content.querySelector('.error');
-    const errorMessageElement = errorMessageTemplate.cloneNode(true);
-    document.body.appendChild(errorMessageElement);
-    errorMessageElement.addEventListener('click', onMessageCloseEvent);
-    document.addEventListener('keydown', onMessageCloseEvent);
+    const errorMessageTemplate = errorMessageFragment.content.querySelector('.error');
+    if (errorMessageTemplate) {
+      const errorMessageElement = errorMessageTemplate.cloneNode(true);
+      document.body.appendChild(errorMessageElement);
+      errorMessageElement.addEventListener('click', onMessageCloseEvent);
+      document.addEventListener('keydown', onMessageCloseEvent);
+    }
   }
 };
 
