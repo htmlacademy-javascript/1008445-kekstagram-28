@@ -14,6 +14,7 @@ const imgUploadFormView = document.querySelector('.img-upload__overlay');
 const imgUploadPreView = document.querySelector('.img-upload__preview img');
 
 const allElementsAvailable = formView &&
+  imgUploadInput &&
   imgUploadFormView &&
   imgUploadPreView &&
   imgUploadCancelButton &&

@@ -17,7 +17,6 @@ scaleControlValuelement &&
 effectLevelValueElement &&
 effectsListElement;
 
-
 const setDefaultEffect = () => {
   imgUploadPreView.className = DEFAULT_EFFECT.class;
   imgUploadPreView.style = DEFAULT_EFFECT.style;
