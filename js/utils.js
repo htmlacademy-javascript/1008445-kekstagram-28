@@ -41,10 +41,27 @@ const showAlert = (message) => {
   }, ALERT_SHOW_TIME);
 };
 
+const debounce = (callback, timeoutDelay) => {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+};
+
+const sortByComments = (a, b) => a.comments && b.comments && a.comments.length && b.comments.length
+  ? b.comments.length - a.comments.length
+  : 0;
+
+const sortByRandom = () => 0.5 - Math.random();
+
 export {
   isEscapeKey,
   checkIfImg,
   showAlert,
   Effects,
-  SubmitButtonTexts
+  SubmitButtonTexts,
+  sortByComments,
+  sortByRandom,
+  debounce
 };

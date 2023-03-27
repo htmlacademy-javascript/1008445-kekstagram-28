@@ -1,31 +1,63 @@
 import { getData } from './api.js';
-import { showAlert } from './utils.js';
+import { showAlert, sortByComments, sortByRandom, debounce } from './utils.js';
 import { openPicturePreview } from './picture-preview.js';
 import { createFormView } from './form-view.js';
 
+const RERENDER_DELAY = 500;
+const imgFiltersElement = document.querySelector('.img-filters');
 const picturesElement = document.querySelector('.pictures');
 const picturesFragment = document.querySelector('#picture');
 const pictureFragment = document.createDocumentFragment();
 const allElementsAvailable = picturesFragment &&
   picturesElement &&
-  pictureFragment;
+  pictureFragment &&
+  imgFiltersElement;
+let allPictures = [];
+
+const renderPicturesView = (pictures) => {
+  document.querySelectorAll('.picture').forEach((element) => element.remove());
+  pictures.forEach(({ id, url, likes, comments, description }) => {
+    const pictureTemplate = picturesFragment.content.querySelector('.picture');
+    if (pictureTemplate) {
+      const pictureElement = pictureTemplate.cloneNode(true);
+      pictureElement.querySelector('.picture__img').src = url;
+      pictureElement.querySelector('.picture__img').alt = description;
+      pictureElement.querySelector('.picture__likes').textContent = likes;
+      pictureElement.querySelector('.picture__comments').textContent = comments.length;
+      pictureElement.dataset.id = id;
+
+      picturesElement.appendChild(pictureElement);
+    }
+  });
+};
+
+const setFilterClick = (cb) => {
+  imgFiltersElement.addEventListener('click', (evt) => {
+    if (evt.target.matches('.img-filters__button')) {
+      const currentFilterButton = evt.target;
+      let sortedPictures = allPictures;
+      if (currentFilterButton.matches('#filter-random')) {
+        sortedPictures = allPictures.slice(0, 10).sort(sortByRandom);
+      } else if (currentFilterButton.matches('#filter-discussed')) {
+        sortedPictures = allPictures.slice().sort(sortByComments);
+      }
+
+      const activeButton = document.querySelector('.img-filters__button--active');
+      if (currentFilterButton !== activeButton) {
+        activeButton.classList.remove('img-filters__button--active');
+        currentFilterButton.classList.add('img-filters__button--active');
+        cb(sortedPictures);
+      }
+    }
+  });
+};
 
 const fillPicturesView = (pictures) => {
   if (allElementsAvailable) {
-    pictures.forEach(({ id, url, likes, comments, description }) => {
-      const pictureTemplate = picturesFragment.content.querySelector('.picture');
-      if (pictureTemplate) {
-        const pictureElement = pictureTemplate.cloneNode(true);
-        pictureElement.querySelector('.picture__img').src = url;
-        pictureElement.querySelector('.picture__img').alt = description;
-        pictureElement.querySelector('.picture__likes').textContent = likes;
-        pictureElement.querySelector('.picture__comments').textContent = comments.length;
-        pictureElement.dataset.id = id;
-        pictureFragment.appendChild(pictureElement);
-      }
-    });
-
-    picturesElement.appendChild(pictureFragment);
+    allPictures = pictures;
+    renderPicturesView(pictures);
+    imgFiltersElement.classList.remove('img-filters--inactive');
+    setFilterClick(debounce((pics) => renderPicturesView(pics), RERENDER_DELAY));
 
     picturesElement.addEventListener('click', (evt) => {
       if (evt.target.matches('.picture__img')) {
@@ -42,15 +74,15 @@ const fillPicturesView = (pictures) => {
   }
 };
 
-function createMainView() {
-  getData()
-    .then((pictures) => {
-      fillPicturesView(pictures);
-    })
-    .catch((e) => {
-      showAlert(e.message);
-    })
-    .finally(createFormView);
+async function createMainView() {
+  try {
+    const pictures = await getData();
+    fillPicturesView(pictures);
+  } catch(err) {
+    showAlert(err.message);
+  } finally {
+    createFormView();
+  }
 }
 
 export { createMainView };
