@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
-const IMG_EXTENTIONS = ['jpg', 'bmp', 'png', 'jpeg'];
 const ALERT_SHOW_TIME = 3000;
+const ImgExtentions = ['jpg', 'bmp', 'png', 'jpeg'];
 const Effects = [
   { class: 'effects__preview--none', style: '' },
   { class: 'effects__preview--chrome', style: 'grayscale', min: 0, max: 1, step: 0.1, dimention: '' },
@@ -31,7 +31,7 @@ const showAlert = (message) => {
 
 const checkIfImg = (file) => {
   if (file.name) {
-    if (IMG_EXTENTIONS.some((extention) => file.name.endsWith(extention))) {
+    if (ImgExtentions.some((extention) => file.name.endsWith(extention))) {
       return true;
     } else {
       return showAlert('Выбран файл с не подходящим расширением');
