@@ -16,8 +16,7 @@ const allElementsAvailable = effectLevelSliderElement &&
   imgUploadPreView &&
   scaleControlValuelement &&
   effectLevelValueElement &&
-  effectsListElement &&
-  imgMiniPreViews;
+  effectsListElement;
 
 const setDefaultEffect = () => {
   imgUploadPreView.className = DEFAULT_EFFECT.class;
