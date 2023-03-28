@@ -1,21 +1,22 @@
 import { Effects } from './utils.js';
 
+const DEFAULT_EFFECT = Effects[0];
+const SLIDER_MIN = 0;
+const SLIDER_MAX = 100;
+const SLIDER_STEP = 1;
 const effectLevelSliderElement = document.querySelector('.effect-level__slider');
 const effectLevelContainerlement = document.querySelector('.img-upload__effect-level');
 const imgUploadPreView = document.querySelector('.img-upload__preview img');
 const scaleControlValuelement = document.querySelector('.scale__control--value');
 const effectLevelValueElement = document.querySelector('.effect-level__value');
 const effectsListElement = document.querySelector('.effects__list');
-const DEFAULT_EFFECT = Effects[0];
-const SLIDER_MIN = 0;
-const SLIDER_MAX = 100;
-const SLIDER_STEP = 1;
+const imgMiniPreViews = document.querySelectorAll('.effects__preview');
 const allElementsAvailable = effectLevelSliderElement &&
-effectLevelContainerlement &&
-imgUploadPreView &&
-scaleControlValuelement &&
-effectLevelValueElement &&
-effectsListElement;
+  effectLevelContainerlement &&
+  imgUploadPreView &&
+  scaleControlValuelement &&
+  effectLevelValueElement &&
+  effectsListElement;
 
 const setDefaultEffect = () => {
   imgUploadPreView.className = DEFAULT_EFFECT.class;
@@ -54,7 +55,7 @@ const sliderOnUpdateEvent = () => {
   }
 };
 
-const createSlider = () => {
+const createSlider = (fileUrl) => {
   if (!allElementsAvailable) {
     return;
   }
@@ -69,6 +70,9 @@ const createSlider = () => {
     connect: 'lower',
   });
 
+  imgMiniPreViews.forEach((miniPreview) => {
+    miniPreview.style.backgroundImage = `url('${ fileUrl }')`;
+  });
   effectLevelContainerlement.classList.add('hidden');
   effectLevelSliderElement.noUiSlider.on('update', sliderOnUpdateEvent);
   effectsListElement.addEventListener('click', onEffectClickEvent);
