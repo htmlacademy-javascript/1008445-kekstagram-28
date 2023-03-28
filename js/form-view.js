@@ -56,6 +56,19 @@ const onFormCloseEvent = (evt) => {
   }
 };
 
+const createFormView = () => {
+  if (!allElementsAvailable) {
+    return;
+  }
+
+  imgUploadInput.addEventListener('change', (evt) => {
+    const [ file ] = evt.target.files;
+    if (file && checkIfImg(file)) {
+      openView(URL.createObjectURL(file));
+    }
+  });
+};
+
 function openView(fileUrl) {
   imgUploadPreView.src = fileUrl;
   formView.addEventListener('submit', onFormSubmitEvent);
@@ -89,18 +102,5 @@ function closeView() {
 
   imgUploadFormView.classList.add('hidden');
 }
-
-const createFormView = () => {
-  if (!allElementsAvailable) {
-    return;
-  }
-
-  imgUploadInput.addEventListener('change', (evt) => {
-    const [ file ] = evt.target.files;
-    if (file && checkIfImg(file)) {
-      openView(URL.createObjectURL(file));
-    }
-  });
-};
 
 export { createFormView };
