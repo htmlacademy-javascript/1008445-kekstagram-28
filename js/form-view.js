@@ -2,7 +2,7 @@ import { isEscapeKey, SubmitButtonTexts } from './utils.js';
 import { sendData } from './api.js';
 import { checkIfImg } from './utils.js';
 import { showSuccessMessage, showErrorMessage } from './message-view.js';
-import { createSlider, destroySlider } from './slider.js';
+import { createSlider, destroySlider } from './effects-slider.js';
 import { createScale, destroyScale } from './scale.js';
 import { createValidator, validate, destroyValidator } from './validator.js';
 
@@ -12,7 +12,6 @@ const imgUploadInput = document.querySelector('.img-upload__input');
 const imgUploadCancelButton = document.querySelector('.img-upload__cancel');
 const imgUploadFormView = document.querySelector('.img-upload__overlay');
 const imgUploadPreView = document.querySelector('.img-upload__preview img');
-
 const allElementsAvailable = formView &&
   imgUploadInput &&
   imgUploadFormView &&
@@ -30,18 +29,20 @@ const unblockSubmitButton = () => {
   formSubmitButton.textContent = SubmitButtonTexts.IDLE;
 };
 
-const onFormSubmitEvent = (evt) => {
+const onFormSubmitEvent = async (evt) => {
   evt.preventDefault();
 
-  if (validate) {
+  if (validate()) {
     blockSubmitButton();
-    sendData(new FormData(evt.target))
-      .then(() => {
-        closeView();
-        showSuccessMessage();
-      })
-      .catch(showErrorMessage)
-      .finally(unblockSubmitButton);
+    try {
+      await sendData(new FormData(evt.target));
+      closeView();
+      showSuccessMessage();
+    } catch (err) {
+      showErrorMessage(err);
+    } finally {
+      unblockSubmitButton();
+    }
   }
 };
 
@@ -55,16 +56,18 @@ const onFormCloseEvent = (evt) => {
   }
 };
 
-function openView() {
+function openView(fileUrl) {
+  imgUploadPreView.src = fileUrl;
   formView.addEventListener('submit', onFormSubmitEvent);
   imgUploadCancelButton.addEventListener('click', onFormCloseEvent);
   document.addEventListener('keydown', onFormCloseEvent);
   document.body.classList.add('modal-open');
-  imgUploadFormView.classList.remove('hidden');
 
   createScale();
-  createSlider();
+  createSlider(fileUrl);
   createValidator();
+
+  imgUploadFormView.classList.remove('hidden');
 }
 
 function closeView() {
@@ -76,7 +79,6 @@ function closeView() {
   imgUploadCancelButton.removeEventListener('click', onFormCloseEvent);
   document.removeEventListener('keydown', onFormCloseEvent);
   document.body.classList.remove('modal-open');
-  imgUploadFormView.classList.add('hidden');
 
   formView.reset();
   imgUploadInput.value = '';
@@ -84,6 +86,8 @@ function closeView() {
   destroyScale();
   destroySlider();
   destroyValidator();
+
+  imgUploadFormView.classList.add('hidden');
 }
 
 const createFormView = () => {
@@ -94,8 +98,7 @@ const createFormView = () => {
   imgUploadInput.addEventListener('change', (evt) => {
     const [ file ] = evt.target.files;
     if (file && checkIfImg(file)) {
-      imgUploadPreView.src = URL.createObjectURL(file);
-      openView();
+      openView(URL.createObjectURL(file));
     }
   });
 };

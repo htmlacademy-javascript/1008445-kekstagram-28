@@ -1,9 +1,9 @@
-const formView = document.querySelector('.img-upload__form');
-const hashtagsInput = document.querySelector('.text__hashtags');
-const commentInput = document.querySelector('.text__description');
 const MAX_HASHTAG_COUNT = 5;
 const MAX_COMMENT_LENGTH = 140;
 const HASHTAG_REG_EXP = /^#[a-zа-яё0-9]{1,19}$/i;
+const formView = document.querySelector('.img-upload__form');
+const hashtagsInput = document.querySelector('.text__hashtags');
+const commentInput = document.querySelector('.text__description');
 const allElementsAvailable = formView &&
   hashtagsInput &&
   commentInput;

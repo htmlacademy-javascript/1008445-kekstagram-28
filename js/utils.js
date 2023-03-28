@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
-const IMG_EXTENTIONS = ['jpg', 'bmp', 'png'];
+const IMG_EXTENTIONS = ['jpg', 'bmp', 'png', 'jpeg'];
 const ALERT_SHOW_TIME = 3000;
-
 const Effects = [
   { class: 'effects__preview--none', style: '' },
   { class: 'effects__preview--chrome', style: 'grayscale', min: 0, max: 1, step: 0.1, dimention: '' },
@@ -17,18 +16,6 @@ const SubmitButtonTexts = {
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-const getExtension = (file) => {
-  const fileParts = file.name.split('.');
-  if (fileParts.length) {
-    return fileParts.pop();
-  }
-};
-
-const checkIfImg = (file) => {
-  const ext = getExtension(file);
-  return ext && IMG_EXTENTIONS.includes(ext);
-};
-
 const showAlert = (message) => {
   const alertElement = document.querySelector('.alert');
   const alertTextEelemnt = document.querySelector('.alert__message');
@@ -40,6 +27,19 @@ const showAlert = (message) => {
     alertElement.classList.remove('show');
   }, ALERT_SHOW_TIME);
 };
+
+
+const checkIfImg = (file) => {
+  if (file.name) {
+    if (IMG_EXTENTIONS.some((extention) => file.name.endsWith(extention))) {
+      return true;
+    } else {
+      return showAlert('Выбран файл с не подходящим расширением');
+    }
+  }
+  showAlert('Что то пошло не так при загрузке файла');
+};
+
 
 const debounce = (callback, timeoutDelay) => {
   let timeoutId;

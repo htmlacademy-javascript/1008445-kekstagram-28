@@ -1,10 +1,10 @@
+const SCALE_MIN = 25;
+const SCALE_MAX = 100;
+const SCALE_STEP = 25;
 const scaleControlValuelement = document.querySelector('.scale__control--value');
 const imgUploadPreView = document.querySelector('.img-upload__preview img');
 const scaleControlSmallerButton = document.querySelector('.scale__control--smaller');
 const scaleControlBiggerBitton = document.querySelector('.scale__control--bigger');
-const SCALE_MIN = 25;
-const SCALE_MAX = 100;
-const SCALE_STEP = 25;
 const allElementsAvailable = scaleControlValuelement &&
   imgUploadPreView &&
   scaleControlSmallerButton &&
