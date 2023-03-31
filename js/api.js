@@ -12,18 +12,17 @@ const TextError = {
   SEND: 'Не удалось отправить форму. Попробуйте ещё раз',
 };
 
-const load = (route, textError, method = Method.GET, body = null) =>
-  fetch(`${ BASE_URL }${ route }`, { method, body })
-    .then((respone) => {
-      if (!respone.ok) {
-        throw new Error();
-      }
-      return respone.json();
-    })
-    .catch(() => {
-      throw new Error(textError);
-    });
-
+const load = async (route, textError, method = Method.GET, body = null) => {
+  try {
+    const respone = await fetch(`${ BASE_URL }${ route }`, { method, body });
+    if (!respone.ok) {
+      throw new Error();
+    }
+    return respone.json();
+  } catch (error) {
+    throw new Error(textError);
+  }
+};
 
 const getData = () => load(Route.GET, TextError.GET);
 
