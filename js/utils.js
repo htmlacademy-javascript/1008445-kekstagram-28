@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 const ALERT_SHOW_TIME = 3000;
+const RANDOM_VALUE = 0.5;
 const ImgExtentions = ['jpg', 'bmp', 'png', 'jpeg'];
 const Effects = [
   { class: 'effects__preview--none', style: '' },
@@ -53,7 +54,7 @@ const sortByComments = (a, b) => a.comments && b.comments && a.comments.length &
   ? b.comments.length - a.comments.length
   : 0;
 
-const sortByRandom = () => 0.5 - Math.random();
+const sortByRandom = () => RANDOM_VALUE - Math.random();
 
 export {
   isEscapeKey,

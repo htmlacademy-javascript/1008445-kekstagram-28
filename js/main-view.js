@@ -4,6 +4,7 @@ import { openPicturePreview } from './picture-preview.js';
 import { createFormView } from './form-view.js';
 
 const RERENDER_DELAY = 500;
+const MAX_RANDOM_PICTURES_COUNT = 10;
 const imgFiltersElement = document.querySelector('.img-filters');
 const picturesElement = document.querySelector('.pictures');
 const picturesFragment = document.querySelector('#picture');
@@ -37,7 +38,7 @@ const setFilterClick = (cb) => {
       const currentFilterButton = evt.target;
       let sortedPictures = allPictures;
       if (currentFilterButton.matches('#filter-random')) {
-        sortedPictures = allPictures.slice(0, 10).sort(sortByRandom);
+        sortedPictures = allPictures.slice(0, MAX_RANDOM_PICTURES_COUNT).sort(sortByRandom);
       } else if (currentFilterButton.matches('#filter-discussed')) {
         sortedPictures = allPictures.slice().sort(sortByComments);
       }
@@ -53,25 +54,27 @@ const setFilterClick = (cb) => {
 };
 
 const fillPicturesView = (pictures) => {
-  if (allElementsAvailable) {
-    allPictures = pictures;
-    renderPicturesView(pictures);
-    imgFiltersElement.classList.remove('img-filters--inactive');
-    setFilterClick(debounce((pics) => renderPicturesView(pics), RERENDER_DELAY));
+  if (!allElementsAvailable) {
+    return;
+  }
 
-    picturesElement.addEventListener('click', (evt) => {
-      if (evt.target.matches('.picture__img')) {
-        const currentPictureElement = evt.target.closest('.picture');
-        if (currentPictureElement && currentPictureElement.dataset && currentPictureElement.dataset.id) {
-          const currentPictureId = +currentPictureElement.dataset.id;
-          const currentPictureObject = pictures.find((pic) => pic.id === currentPictureId);
-          if (currentPictureObject) {
-            openPicturePreview(currentPictureObject);
-          }
+  allPictures = pictures;
+  renderPicturesView(pictures);
+  imgFiltersElement.classList.remove('img-filters--inactive');
+  setFilterClick(debounce((pics) => renderPicturesView(pics), RERENDER_DELAY));
+
+  picturesElement.addEventListener('click', (evt) => {
+    if (evt.target.matches('.picture__img')) {
+      const currentPictureElement = evt.target.closest('.picture');
+      if (currentPictureElement && currentPictureElement.dataset && currentPictureElement.dataset.id) {
+        const currentPictureId = +currentPictureElement.dataset.id;
+        const currentPictureObject = pictures.find((pic) => pic.id === currentPictureId);
+        if (currentPictureObject) {
+          openPicturePreview(currentPictureObject);
         }
       }
-    });
-  }
+    }
+  });
 };
 
 async function createMainView() {
