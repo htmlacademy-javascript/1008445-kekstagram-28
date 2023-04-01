@@ -50,10 +50,10 @@ const fillComments = () => {
   }
 };
 
-const commentLoaderButtonClick = () => {
+const onCommentLoaderButtonClick = () => {
   if (currentVisibleCommentsCount + COMMENT_COUNT_PART >= pictureComments.length) {
     commentLoaderButton.classList.add('hidden');
-    commentLoaderButton.removeEventListener('click', commentLoaderButtonClick);
+    commentLoaderButton.removeEventListener('click', onCommentLoaderButtonClick);
     currentVisibleCommentsCount = pictureComments.length;
   } else {
     currentVisibleCommentsCount += COMMENT_COUNT_PART;
@@ -70,7 +70,7 @@ function openView() {
 
   if (isCommentLoaderButtonVisible) {
     commentLoaderButton.classList.remove('hidden');
-    commentLoaderButton.addEventListener('click', commentLoaderButtonClick);
+    commentLoaderButton.addEventListener('click', onCommentLoaderButtonClick);
   } else {
     commentLoaderButton.classList.add('hidden');
   }
@@ -89,7 +89,7 @@ function closeView() {
 
   if (!commentLoaderButton.classList.contains('hidden')) {
     commentLoaderButton.classList.add('hidden');
-    commentLoaderButton.removeEventListener('click', commentLoaderButtonClick);
+    commentLoaderButton.removeEventListener('click', onCommentLoaderButtonClick);
   }
 
   bigPictureView.classList.add('hidden');
