@@ -6,18 +6,28 @@ import { createFormView } from './form-view.js';
 const RERENDER_DELAY = 500;
 const MAX_RANDOM_PICTURES_COUNT = 10;
 const imgFiltersElement = document.querySelector('.img-filters');
-const picturesElement = document.querySelector('.pictures');
+const picturesContainer = document.querySelector('.pictures');
 const picturesFragment = document.querySelector('#picture');
 const pictureFragment = document.createDocumentFragment();
 const allElementsAvailable = picturesFragment &&
-  picturesElement &&
+  picturesContainer &&
   pictureFragment &&
   imgFiltersElement;
-let allPictures = [];
+let pictures = [];
+let currentFilter = getCurrentFilter();
 
-const renderPicturesView = (pictures) => {
+const getFilteredPictures = () => {
+  switch (currentFilter) {
+    case 'filter-random': return [ ...pictures ].slice(0, MAX_RANDOM_PICTURES_COUNT).sort(sortByRandom);
+    case 'filter-discussed': return [ ...pictures ].slice().sort(sortByComments);
+    case 'filter-default': return [ ...pictures ];
+  }
+};
+
+const renderPicturesView = () => {
   document.querySelectorAll('.picture').forEach((element) => element.remove());
-  pictures.forEach(({ id, url, likes, comments, description }) => {
+  const filteredPictures = getFilteredPictures();
+  filteredPictures.forEach(({ id, url, likes, comments, description }) => {
     const pictureTemplate = picturesFragment.content.querySelector('.picture');
     if (pictureTemplate) {
       const pictureElement = pictureTemplate.cloneNode(true);
@@ -27,7 +37,7 @@ const renderPicturesView = (pictures) => {
       pictureElement.querySelector('.picture__comments').textContent = comments.length;
       pictureElement.dataset.id = id;
 
-      picturesElement.appendChild(pictureElement);
+      picturesContainer.appendChild(pictureElement);
     }
   });
 };
@@ -36,51 +46,54 @@ const setFilterClick = (cb) => {
   imgFiltersElement.addEventListener('click', (evt) => {
     if (evt.target.matches('.img-filters__button')) {
       const currentFilterButton = evt.target;
-      let sortedPictures = allPictures;
-      if (currentFilterButton.matches('#filter-random')) {
-        sortedPictures = allPictures.slice(0, MAX_RANDOM_PICTURES_COUNT).sort(sortByRandom);
-      } else if (currentFilterButton.matches('#filter-discussed')) {
-        sortedPictures = allPictures.slice().sort(sortByComments);
-      }
-
       const activeButton = document.querySelector('.img-filters__button--active');
+
       if (currentFilterButton !== activeButton) {
         activeButton.classList.remove('img-filters__button--active');
         currentFilterButton.classList.add('img-filters__button--active');
-        cb(sortedPictures);
+        currentFilter = getCurrentFilter(currentFilterButton);
+        cb(getFilteredPictures());
       }
     }
   });
 };
 
-const fillPicturesView = (pictures) => {
-  if (!allElementsAvailable) {
+const onPicturesContainerClick = (evt) => {
+  if (evt.target.matches('.picture__img')) {
+    const currentPictureElement = evt.target.closest('.picture');
+    if (currentPictureElement && currentPictureElement.dataset && currentPictureElement.dataset.id) {
+      const currentPictureId = +currentPictureElement.dataset.id;
+      const currentPictureObject = pictures.find((picture) => picture.id === currentPictureId);
+      if (currentPictureObject) {
+        openPicturePreview(currentPictureObject);
+      }
+    }
+  }
+};
+
+const fillPicturesView = (loadedPictures) => {
+  if (!allElementsAvailable && loadedPictures && loadedPictures.length) {
     return;
   }
 
-  allPictures = pictures;
-  renderPicturesView(pictures);
-  imgFiltersElement.classList.remove('img-filters--inactive');
-  setFilterClick(debounce((pics) => renderPicturesView(pics), RERENDER_DELAY));
+  pictures = [ ...loadedPictures ];
+  renderPicturesView();
+  picturesContainer.addEventListener('click', onPicturesContainerClick);
 
-  picturesElement.addEventListener('click', (evt) => {
-    if (evt.target.matches('.picture__img')) {
-      const currentPictureElement = evt.target.closest('.picture');
-      if (currentPictureElement && currentPictureElement.dataset && currentPictureElement.dataset.id) {
-        const currentPictureId = +currentPictureElement.dataset.id;
-        const currentPictureObject = pictures.find((pic) => pic.id === currentPictureId);
-        if (currentPictureObject) {
-          openPicturePreview(currentPictureObject);
-        }
-      }
-    }
-  });
+  setFilterClick(debounce(renderPicturesView, RERENDER_DELAY));
+  imgFiltersElement.classList.remove('img-filters--inactive');
 };
+
+function getCurrentFilter(filterButton) {
+  if (filterButton) {
+    return filterButton.id;
+  }
+  return 'filter-default';
+}
 
 async function createMainView() {
   try {
-    const pictures = await getData();
-    fillPicturesView(pictures);
+    fillPicturesView(await getData());
   } catch(err) {
     showAlert(err.message);
   } finally {
